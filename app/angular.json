@@ -17,6 +17,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "highcharts", "chart.js", "file-saver", "tiff.js"
+            ],
             "outputPath": "dist/app",
             "index": "src/index.html",
             "main": "src/main.ts",

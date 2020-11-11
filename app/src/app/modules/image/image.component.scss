@@ -1,0 +1,18 @@
+.canvas-container {
+    height: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-container input[type=file] {
+    text-align-last: center;
+}
+
+.tiffInfo {
+    background-color: lightsteelblue;
+}
+
+mat-spinner {
+    position: absolute;
+}

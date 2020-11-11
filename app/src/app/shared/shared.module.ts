@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { MultiParamsComponent } from './components/multi-params/multi-params.component';
 import { AreaComponent } from './widgets/area/area.component';
 import { CardComponent } from './widgets/card/card.component';
 import { PieComponent } from './widgets/pie/pie.component';
@@ -17,12 +18,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatListModule } from '@angular/material/list';
+import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { ChartsModule } from 'ng2-charts';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,8 @@ import { ChartsModule } from 'ng2-charts';
     CardComponent,
     PieComponent,
     TableComponent,
-    BarComponent
+    BarComponent,
+    MultiParamsComponent
   ],
   imports: [
     CommonModule,
@@ -42,13 +46,15 @@ import { ChartsModule } from 'ng2-charts';
     MatToolbarModule,
     MatIconModule,
     MatButtonModule,
+    MatInputModule,
     MatMenuModule,
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
     FlexLayoutModule,
     HighchartsChartModule,
-    ChartsModule
+    ChartsModule,
+    ReactiveFormsModule
   ],
   exports: [
     HeaderComponent,
@@ -58,7 +64,8 @@ import { ChartsModule } from 'ng2-charts';
     CardComponent,
     PieComponent,
     TableComponent,
-    BarComponent
+    BarComponent,
+    MultiParamsComponent
   ]
 })
 export class SharedModule { }

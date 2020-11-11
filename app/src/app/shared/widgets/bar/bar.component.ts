@@ -29,9 +29,11 @@ export class BarComponent implements OnInit {
 
     // Losowanie wartosci wykresu co 2 s z przedzialu 0 - 100
     setInterval(() => {
-      let liczba = this.getRandomInt(0, 100);
-      this.barChartData[0].data = [liczba, liczba, liczba, liczba, liczba, liczba, liczba];
-    }, 2000)
+      let a = this.getRandomInt(0, 100);
+      let b = this.getRandomInt(0, 100);
+      this.barChartData[0].data = [a, a, 100, a, a, a, 0];
+      this.barChartData[1].data = [b, 0, b, b, 100, b, b];
+    }, 2000);
   }
 
   getRandomInt(min: number, max: number): number {
