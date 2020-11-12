@@ -1,29 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import * as Tiff from 'tiff.js';
 import * as FileSaver from 'file-saver';
+import { DashboardService } from 'src/app/services/dashboard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-image',
   templateUrl: './image.component.html',
   styleUrls: ['./image.component.scss']
 })
-export class ImageComponent implements OnInit {
+export class ImageComponent implements OnInit, OnDestroy {
 
   tiffImage: any;  // Image as Tiff
   tiffInfo: {};  // Tiff info
-  canvasContainer;  // For styling and replace tiffs
+  canvasContainer: HTMLElement;  // For styling and replace tiffs
   loading = false;
   tiffFileObject: File;  // Tiff as File
   withDownload = false;
 
-  constructor(private apiService: ApiService) {
-    Tiff.initialize({ TOTAL_MEMORY: 4777216 * 10 }); //Initialize the memory with 47 MB
+  chartData: [{ data: [], label: string }];
+  chartSettings: { labels: [], options: {} };
+  subscription: Subscription;
+
+  constructor(
+    private apiService: ApiService,
+    private dashboardService: DashboardService) {
+    Tiff.initialize({ TOTAL_MEMORY: 4777216 * 10 });  // Initialize the memory with 47 MB
+
+    this.dashboardService.getCpuSettings().subscribe(settings => {
+      this.chartSettings = settings;
+    });
+
+    this.subscription = this.dashboardService.getCpuDataCpu().subscribe(data => {
+      this.chartData = data;
+    });
   }
 
   ngOnInit(): void {
     this.canvasContainer = document.querySelector('.canvas-container');
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   readFile(input: any): void {

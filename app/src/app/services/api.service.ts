@@ -35,4 +35,11 @@ export class ApiService {
       );
     }
   }
+
+  systemUsage(): Observable<any> {
+    return this.http.get(
+      this.baseUrl + '/system_usage/',
+      { headers: this.httpHeaders }
+    );
+  }
 }

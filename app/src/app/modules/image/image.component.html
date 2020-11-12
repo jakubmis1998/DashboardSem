@@ -1,36 +1,48 @@
-<div class="image-container d-flex align-items-center flex-column mt-5">
-	<input type="file" (change)="readFile($event)">
+<div class="d-flex flex-row">
 
-	<div class="canvas-container mt-5">
-		<mat-spinner *ngIf="loading"></mat-spinner>
+	<div class="image-container d-flex align-items-center flex-column" fxFlex="40">
+		<input type="file" (change)="readFile($event)">
+
+		<div class="canvas-container text-center mt-2">
+			<mat-spinner *ngIf="loading"></mat-spinner>
+		</div>
+
+		<div *ngIf="tiffInfo" class="tiffInfo rounded mt-2 p-2">
+			<div class="d-flex justify-content-center mb-1">
+				<button (click)="goLeft()" mat-raised-button class="mr-2"
+					[disabled]="tiffInfo['current_page'] === 0">
+					<i class="fas fa-arrow-left"></i>
+				</button>
+				<button (click)="goRight()" mat-raised-button class="ml-2"
+					[disabled]="tiffInfo['current_page']+1 === tiffInfo['pages']">
+					<i class="fas fa-arrow-right"></i>
+				</button>
+			</div>
+			<div class="d-flex flex-column">
+				<label>
+					<strong>Name:</strong> {{ tiffInfo['name'] }}
+				</label>
+				<label>
+					<strong>Size:</strong> {{ tiffInfo['width'] }}px x {{ tiffInfo['height'] }}px
+				</label>
+				<label>
+					<strong>Page:</strong> {{ tiffInfo['current_page']+1 }}/{{ tiffInfo['pages'] }}
+				</label>
+
+				<mat-checkbox color="primary" [(ngModel)]="withDownload">With download</mat-checkbox>
+				{{ withDownload }}
+
+				<app-multi-params (parametersEvent)="onNewParameters($event)"></app-multi-params>
+			</div>
+		</div>
 	</div>
 
-	<div *ngIf="tiffInfo" class="tiffInfo rounded mt-5 p-2">
-		<div class="d-flex justify-content-center mb-1">
-			<button (click)="goLeft()" mat-raised-button class="mr-2"
-				[disabled]="tiffInfo['current_page'] === 0">
-				<i class="fas fa-arrow-left"></i>
-			</button>
-			<button (click)="goRight()" mat-raised-button class="ml-2"
-				[disabled]="tiffInfo['current_page']+1 === tiffInfo['pages']">
-				<i class="fas fa-arrow-right"></i>
-			</button>
-		</div>
-		<div class="d-flex flex-column">
-			<label>
-				<strong>Name:</strong> {{ tiffInfo['name'] }}
-			</label>
-			<label>
-				<strong>Size:</strong> {{ tiffInfo['width'] }}px x {{ tiffInfo['height'] }}px
-			</label>
-			<label>
-				<strong>Page:</strong> {{ tiffInfo['current_page']+1 }}/{{ tiffInfo['pages'] }}
-			</label>
-
-			<mat-checkbox color="primary" [(ngModel)]="withDownload">With download</mat-checkbox>
-            {{ withDownload }}
-
-			<app-multi-params (parametersEvent)="onNewParameters($event)"></app-multi-params>
-		</div>
+	<div class="chart-container" fxFlex="60">
+		<app-widget-bar *ngIf="chartData && chartSettings"
+			[data]="chartData"
+			[labels]="chartSettings.labels"
+			[options]="chartSettings.options">
+		</app-widget-bar>
 	</div>
+
 </div>

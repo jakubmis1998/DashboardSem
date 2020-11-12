@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Observable, of, Subject } from 'rxjs';
 import { PeriodicElement } from '../shared/widgets/table/table.component';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
 
-  constructor() { }
+  private cpuSettingsSubject = new Subject<any>();
+  private cpuDataSubject = new Subject<any>();
+
+  constructor(private apiService: ApiService) { }
 
   bigChartData() {
     return [{
@@ -94,5 +99,54 @@ export class DashboardService {
       { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
       { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' }
     ];
+  }
+
+  initCpuSettings() {
+    /* System usage - cpu usage, ram usage, cpu_count */
+    this.apiService.systemUsage().subscribe(
+      response => {
+        /* Labels - [ '#1', '#2', ..., '#cpu_count' ] */
+        let labels: any = Array.from(Array(response['cpu_count']).keys());
+        labels = labels.map(label => '#' + (label + 1).toString());
+
+        /* Options */
+        const options = {
+          scaleShowVerticalLines: false,
+          responsive: true,
+          scales : {
+            yAxes: [{
+              ticks: {
+                  steps : 10,
+                  stepValue : 10,
+                  max : 100,
+                  min: 0
+                }
+            }]
+          }
+        };
+
+        this.cpuSettingsSubject.next({ labels: labels, options: options });
+      }
+    );
+  }
+
+  setCpuData() {
+    /* System usage - cpu usage, ram usage, cpu_count */
+    this.apiService.systemUsage().subscribe(
+      response => {
+        /* Data [{ data: [], label: 'Title' }, ...] */
+        let data = [{ data: response.cpu_usage, label: 'CPU usage' }];
+
+        this.cpuDataSubject.next(data);
+      }
+    );
+  }
+
+  getCpuSettings() {
+    return this.cpuSettingsSubject.asObservable();
+  }
+
+  getCpuDataCpu() {
+    return this.cpuDataSubject.asObservable();
   }
 }
