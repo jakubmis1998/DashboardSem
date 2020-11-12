@@ -22,18 +22,20 @@ export class ImageComponent implements OnInit, OnDestroy {
 
   chartData: [{ data: [], label: string }];
   chartSettings: { labels: [], options: {} };
-  subscription: Subscription;
+  dataSubscription: Subscription;
+  settingsSubscription: Subscription;
 
   constructor(
     private apiService: ApiService,
     private dashboardService: DashboardService) {
     Tiff.initialize({ TOTAL_MEMORY: 4777216 * 10 });  // Initialize the memory with 47 MB
-
-    this.dashboardService.getCpuSettings().subscribe(settings => {
+  
+    this.dashboardService.initCpuSettings();
+    this.settingsSubscription = this.dashboardService.getCpuSettings().subscribe(settings => {
       this.chartSettings = settings;
     });
 
-    this.subscription = this.dashboardService.getCpuDataCpu().subscribe(data => {
+    this.dataSubscription = this.dashboardService.getCpuDataCpu().subscribe(data => {
       this.chartData = data;
     });
   }
@@ -43,7 +45,8 @@ export class ImageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.dataSubscription.unsubscribe();
+    this.settingsSubscription.unsubscribe();
   }
 
   readFile(input: any): void {

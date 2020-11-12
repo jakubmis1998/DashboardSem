@@ -30,7 +30,6 @@
 				</label>
 
 				<mat-checkbox color="primary" [(ngModel)]="withDownload">With download</mat-checkbox>
-				{{ withDownload }}
 
 				<app-multi-params (parametersEvent)="onNewParameters($event)"></app-multi-params>
 			</div>
@@ -38,6 +37,7 @@
 	</div>
 
 	<div class="chart-container" fxFlex="60">
+		<mat-spinner *ngIf="!chartData || !chartSettings"></mat-spinner>
 		<app-widget-bar *ngIf="chartData && chartSettings"
 			[data]="chartData"
 			[labels]="chartSettings.labels"

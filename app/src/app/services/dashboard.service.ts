@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PeriodicElement } from '../shared/widgets/table/table.component';
 import { ApiService } from './api.service';
 

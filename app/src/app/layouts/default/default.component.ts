@@ -17,7 +17,6 @@ export class DefaultComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.dashboardService.initCpuSettings();
     this.dashboardService.setCpuData();
     setInterval(() => {
       if (this.router.url === '/image') {
