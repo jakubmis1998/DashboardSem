@@ -36,13 +36,22 @@
 		</div>
 	</div>
 
-	<div class="chart-container" fxFlex="60">
-		<mat-spinner *ngIf="!chartData || !chartSettings"></mat-spinner>
-		<app-widget-bar *ngIf="chartData && chartSettings"
-			[data]="chartData"
-			[labels]="chartSettings.labels"
-			[options]="chartSettings.options">
+	<div class="cpu-chart-container" fxFlex="60">
+		<mat-spinner *ngIf="!cpuChartData || !cpuChartSettings"></mat-spinner>
+		<app-widget-bar *ngIf="cpuChartData && cpuChartSettings"
+			[data]="cpuChartData"
+			[labels]="cpuChartSettings.labels"
+			[options]="cpuChartSettings.options">
 		</app-widget-bar>
 	</div>
 
+</div>
+
+<div class="ram-chart-container w-50 float-right">
+	<mat-spinner *ngIf="!ramChartData || !ramChartSettings"></mat-spinner>
+	<app-widget-bar *ngIf="ramChartData && ramChartSettings"
+		[data]="ramChartData"
+		[labels]="ramChartSettings.labels"
+		[options]="ramChartSettings.options">
+	</app-widget-bar>
 </div>

@@ -11,6 +11,9 @@ export class DashboardService {
   private cpuSettingsSubject = new Subject<any>();
   private cpuDataSubject = new Subject<any>();
 
+  private ramDataSubject = new Subject<any>();
+  private ramSettingsSubject = new Subject<any>();
+
   constructor(private apiService: ApiService) { }
 
   bigChartData() {
@@ -101,13 +104,13 @@ export class DashboardService {
     ];
   }
 
-  initCpuSettings() {
+  initSystemSettings() {
     /* System usage - cpu usage, ram usage, cpu_count */
     this.apiService.systemUsage().subscribe(
       response => {
         /* Labels - [ '#1', '#2', ..., '#cpu_count' ] */
-        let labels: any = Array.from(Array(response['cpu_count']).keys());
-        labels = labels.map(label => '#' + (label + 1).toString());
+        let cpuLabels: any = Array.from(Array(response['cpu_count']).keys());
+        cpuLabels = cpuLabels.map(label => '#' + (label + 1).toString());
 
         /* Options */
         const options = {
@@ -125,19 +128,22 @@ export class DashboardService {
           }
         };
 
-        this.cpuSettingsSubject.next({ labels: labels, options: options });
+        this.cpuSettingsSubject.next({ labels: cpuLabels, options: options });
+        this.ramSettingsSubject.next({ labels: ['#1'], options: options });
       }
     );
   }
 
-  setCpuData() {
+  setSystemData() {
     /* System usage - cpu usage, ram usage, cpu_count */
     this.apiService.systemUsage().subscribe(
       response => {
         /* Data [{ data: [], label: 'Title' }, ...] */
-        let data = [{ data: response.cpu_usage, label: 'CPU usage' }];
+        let cpuData = [{ data: response.cpu_usage, label: 'CPU usage' }];
+        let ramData = [{ data: [ response.ram_usage.percent ], label: 'RAM usage' }];
 
-        this.cpuDataSubject.next(data);
+        this.cpuDataSubject.next(cpuData);
+        this.ramDataSubject.next(ramData);
       }
     );
   }
@@ -146,7 +152,15 @@ export class DashboardService {
     return this.cpuSettingsSubject.asObservable();
   }
 
-  getCpuDataCpu() {
+  getCpuData() {
     return this.cpuDataSubject.asObservable();
+  }
+
+  getRamSettings() {
+    return this.ramSettingsSubject.asObservable();
+  }
+
+  getRamData() {
+    return this.ramDataSubject.asObservable();
   }
 }

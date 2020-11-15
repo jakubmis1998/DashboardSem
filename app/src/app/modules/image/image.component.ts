@@ -20,23 +20,37 @@ export class ImageComponent implements OnInit, OnDestroy {
   tiffFileObject: File;  // Tiff as File
   withDownload = false;
 
-  chartData: [{ data: [], label: string }];
-  chartSettings: { labels: [], options: {} };
-  dataSubscription: Subscription;
-  settingsSubscription: Subscription;
+  cpuChartData: [{ data: number[], label: string }];
+  cpuChartSettings: { labels: string[], options: {} };
+  cpuDataSubscription: Subscription;
+  cpuSettingsSubscription: Subscription;
+
+  ramChartData: [{ data: number[], label: string }];
+  ramChartSettings: { labels: string[], options: {} };
+  ramDataSubscription: Subscription;
+  ramSettingsSubscription: Subscription;
 
   constructor(
     private apiService: ApiService,
     private dashboardService: DashboardService) {
     Tiff.initialize({ TOTAL_MEMORY: 4777216 * 10 });  // Initialize the memory with 47 MB
+
+    this.dashboardService.initSystemSettings();
   
-    this.dashboardService.initCpuSettings();
-    this.settingsSubscription = this.dashboardService.getCpuSettings().subscribe(settings => {
-      this.chartSettings = settings;
+    /* CPU CHART */
+    this.cpuSettingsSubscription = this.dashboardService.getCpuSettings().subscribe(settings => {
+      this.cpuChartSettings = settings;
+    });
+    this.cpuDataSubscription = this.dashboardService.getCpuData().subscribe(data => {
+      this.cpuChartData = data;
     });
 
-    this.dataSubscription = this.dashboardService.getCpuDataCpu().subscribe(data => {
-      this.chartData = data;
+    /* RAM CHART */
+    this.ramSettingsSubscription = this.dashboardService.getRamSettings().subscribe(settings => {
+      this.ramChartSettings = settings;
+    });
+    this.ramDataSubscription = this.dashboardService.getRamData().subscribe(data => {
+      this.ramChartData = data;
     });
   }
 
@@ -45,8 +59,10 @@ export class ImageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.dataSubscription.unsubscribe();
-    this.settingsSubscription.unsubscribe();
+    this.cpuDataSubscription.unsubscribe();
+    this.cpuSettingsSubscription.unsubscribe();
+
+    this.ramDataSubscription.unsubscribe();
   }
 
   readFile(input: any): void {

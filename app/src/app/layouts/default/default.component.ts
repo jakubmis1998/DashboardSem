@@ -17,10 +17,10 @@ export class DefaultComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.dashboardService.setCpuData();
+    this.dashboardService.setSystemData();
     setInterval(() => {
       if (this.router.url === '/image') {
-        this.dashboardService.setCpuData();
+        this.dashboardService.setSystemData();
       }
     }, 2000);
   }
