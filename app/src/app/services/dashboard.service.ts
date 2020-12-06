@@ -110,26 +110,56 @@ export class DashboardService {
       response => {
         /* Labels - [ '#1', '#2', ..., '#cpu_count' ] */
         let cpuLabels: any = Array.from(Array(response['cpu_count']).keys());
-        cpuLabels = cpuLabels.map(label => '#' + (label + 1).toString());
+        cpuLabels = cpuLabels.map(label => (label + 1).toString());
 
-        /* Options */
-        const options = {
+        /* CPU Options */
+        const cpuOptions = {
           scaleShowVerticalLines: false,
           responsive: true,
           scales : {
             yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'CPU usage percentage'
+              },
               ticks: {
-                  steps : 10,
-                  stepValue : 10,
-                  max : 100,
-                  min: 0
-                }
+                steps: 10,
+                stepValue: 10,
+                max: 100,
+                min: 0
+              }
+            }],
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'Processor number'
+              }
             }]
           }
         };
 
-        this.cpuSettingsSubject.next({ labels: cpuLabels, options: options });
-        this.ramSettingsSubject.next({ labels: ['#1'], options: options });
+        /* RAM Options */
+        const ramOptions = {
+          scaleShowVerticalLines: false,
+          responsive: true,
+          scales : {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: 'RAM usage percentage'
+              },
+              ticks: {
+                steps: 10,
+                stepValue: 10,
+                max: 100,
+                min: 0
+              }
+            }]
+          }
+        };
+
+        this.cpuSettingsSubject.next({ labels: cpuLabels, options: cpuOptions });
+        this.ramSettingsSubject.next({ labels: [''], options: ramOptions });
       }
     );
   }
@@ -139,8 +169,18 @@ export class DashboardService {
     this.apiService.systemUsage().subscribe(
       response => {
         /* Data [{ data: [], label: 'Title' }, ...] */
-        let cpuData = [{ data: response.cpu_usage, label: 'CPU usage' }];
-        let ramData = [{ data: [ response.ram_usage.percent ], label: 'RAM usage' }];
+        const cpuData = [{ 
+          data: response.cpu_usage,
+          label: 'CPU usage',
+          backgroundColor: '#f5b01b',
+          hoverBackgroundColor: '#ff6200'
+        }];
+        const ramData = [{ 
+          data: [ response.ram_usage.percent ],
+          label: 'RAM usage',
+          backgroundColor: '#1aacf0',
+          hoverBackgroundColor: '#0388fc'
+        }];
 
         this.cpuDataSubject.next(cpuData);
         this.ramDataSubject.next(ramData);

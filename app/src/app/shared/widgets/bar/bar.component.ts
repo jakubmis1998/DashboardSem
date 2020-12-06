@@ -20,6 +20,8 @@ export class BarComponent implements OnInit {
   };
   @Input() labels = []; // Bottom of chart
   @Input() options = {};
+  @Input() height: number;
+
   type: string = 'bar';
   legend: boolean = true;
   chartInitialized = false;

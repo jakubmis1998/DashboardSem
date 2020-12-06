@@ -1,57 +1,56 @@
-<div class="d-flex flex-row">
-
-	<div class="image-container d-flex align-items-center flex-column" fxFlex="40">
-		<input type="file" (change)="readFile($event)">
-
-		<div class="canvas-container text-center mt-2">
-			<mat-spinner *ngIf="loading"></mat-spinner>
-		</div>
-
-		<div *ngIf="tiffInfo" class="tiffInfo rounded mt-2 p-2">
-			<div class="d-flex justify-content-center mb-1">
-				<button (click)="goLeft()" mat-raised-button class="mr-2"
-					[disabled]="tiffInfo['current_page'] === 0">
-					<i class="fas fa-arrow-left"></i>
-				</button>
-				<button (click)="goRight()" mat-raised-button class="ml-2"
-					[disabled]="tiffInfo['current_page']+1 === tiffInfo['pages']">
-					<i class="fas fa-arrow-right"></i>
-				</button>
-			</div>
-			<div class="d-flex flex-column">
-				<label>
-					<strong>Name:</strong> {{ tiffInfo['name'] }}
-				</label>
-				<label>
-					<strong>Size:</strong> {{ tiffInfo['width'] }}px x {{ tiffInfo['height'] }}px
-				</label>
-				<label>
-					<strong>Page:</strong> {{ tiffInfo['current_page']+1 }}/{{ tiffInfo['pages'] }}
-				</label>
-
-				<mat-checkbox color="primary" [(ngModel)]="withDownload">With download</mat-checkbox>
-
-				<app-multi-params (parametersEvent)="onNewParameters($event)"></app-multi-params>
-			</div>
-		</div>
+<input type="file" (change)="readFile($event)">
+<div class="image-container d-flex flex-column mt-2">
+	<div class="canvas-container text-center">
+		<mat-spinner *ngIf="loading"></mat-spinner>
 	</div>
 
-	<div class="cpu-chart-container" fxFlex="60">
+	<div *ngIf="tiffInfo" class="tiffInfo p-2">
+		<div class="d-flex justify-content-center mb-1">
+			<button (click)="goLeft()" mat-raised-button class="mr-2"
+				[disabled]="tiffInfo['current_page'] === 0">
+				<i class="fas fa-arrow-left"></i>
+			</button>
+			<button (click)="goRight()" mat-raised-button class="ml-2"
+				[disabled]="tiffInfo['current_page']+1 === tiffInfo['pages']">
+				<i class="fas fa-arrow-right"></i>
+			</button>
+		</div>
+		<div class="d-flex flex-column">
+			<label>
+				<strong>Name:</strong> {{ tiffInfo['name'] }}
+			</label>
+			<label>
+				<strong>Size:</strong> {{ tiffInfo['width'] }}px x {{ tiffInfo['height'] }}px
+			</label>
+			<label>
+				<strong>Page:</strong> {{ tiffInfo['current_page']+1 }}/{{ tiffInfo['pages'] }}
+			</label>
+
+			<mat-checkbox color="primary" [(ngModel)]="withDownload">With download</mat-checkbox>
+
+			<app-multi-params (parametersEvent)="onNewParameters($event)"></app-multi-params>
+		</div>
+	</div>
+</div>
+
+<div>
+	<div class="cpu-chart-container" fxFlex="80">
 		<mat-spinner *ngIf="!cpuChartData || !cpuChartSettings"></mat-spinner>
 		<app-widget-bar *ngIf="cpuChartData && cpuChartSettings"
 			[data]="cpuChartData"
 			[labels]="cpuChartSettings.labels"
-			[options]="cpuChartSettings.options">
+			[options]="cpuChartSettings.options"
+			[height]="130">
 		</app-widget-bar>
 	</div>
-
-</div>
-
-<div class="ram-chart-container w-50 float-right">
-	<mat-spinner *ngIf="!ramChartData || !ramChartSettings"></mat-spinner>
-	<app-widget-bar *ngIf="ramChartData && ramChartSettings"
-		[data]="ramChartData"
-		[labels]="ramChartSettings.labels"
-		[options]="ramChartSettings.options">
-	</app-widget-bar>
+	
+	<div class="ram-chart-container" fxFlex="20">
+		<mat-spinner *ngIf="!ramChartData || !ramChartSettings"></mat-spinner>
+		<app-widget-bar *ngIf="ramChartData && ramChartSettings"
+			[data]="ramChartData"
+			[labels]="ramChartSettings.labels"
+			[options]="ramChartSettings.options"
+			[height]="500">
+		</app-widget-bar>
+	</div>
 </div>
