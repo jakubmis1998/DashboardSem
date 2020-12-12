@@ -36,7 +36,7 @@ export class ImageComponent implements OnInit, OnDestroy {
     Tiff.initialize({ TOTAL_MEMORY: 4777216 * 10 });  // Initialize the memory with 47 MB
 
     this.dashboardService.initSystemSettings();
-  
+
     /* CPU CHART */
     this.cpuSettingsSubscription = this.dashboardService.getCpuSettings().subscribe(settings => {
       this.cpuChartSettings = settings;
@@ -58,7 +58,7 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.canvasContainer = document.querySelector('.canvas-container');
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.cpuDataSubscription.unsubscribe();
     this.cpuSettingsSubscription.unsubscribe();
 
@@ -69,7 +69,7 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.loading = true;
 
     this.tiffFileObject = input.target.files[0];
-    let fileReader = new FileReader();
+    const fileReader = new FileReader();
 
     /* Convert File to ArrayBuffer and display TIFF */
     fileReader.readAsArrayBuffer(this.tiffFileObject); // convert selected file
@@ -89,22 +89,22 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.tiffInfo['current_page'] = this.tiffImage.currentDirectory();
   }
 
-  goLeft() {
-    let currentPage = this.tiffInfo['current_page'];
+  goLeft(): void {
+    const currentPage = this.tiffInfo['current_page'];
     this.tiffImage.setDirectory(currentPage - 1);
     this.tiffInfo['current_page'] -= 1;
     this.replaceTiff();
   }
 
-  goRight() {
-    let currentPage = this.tiffInfo['current_page'];
+  goRight(): void {
+    const currentPage = this.tiffInfo['current_page'];
     this.tiffImage.setDirectory(currentPage + 1);
     this.tiffInfo['current_page'] += 1;
     this.replaceTiff();
   }
 
-  replaceTiff() {
-    let newCanvas = this.tiffImage.toCanvas();
+  replaceTiff(): void {
+    const newCanvas = this.tiffImage.toCanvas();
     newCanvas.classList.add('w-50');
     if (this.canvasContainer.querySelector('canvas')) {
       this.canvasContainer.replaceChild(newCanvas, this.canvasContainer.querySelector('canvas'));
@@ -114,21 +114,30 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
-  onNewParameters(parameters: FormArray) {
+  onNewParameters(parameters: FormArray): void {
     if (this.withDownload) {
       this.apiService.sendParametrizedImage(this.tiffFileObject, parameters, true).subscribe(
         response => {
-          let blob = new Blob([response], { type: 'image/tiff' });
-          FileSaver.saveAs(blob, 'somefilename.tif');
+          const blob = new Blob([response], { type: 'image/tiff' });
+          FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}.tif`);
         },
         error => console.log(error)
       );
     } else {
-      this.apiService.sendParametrizedImage(this.tiffFileObject, parameters, false).subscribe(
+      const formData = new FormData();
+      parameters['filename'] = this.tiffFileObject.name;
+      parameters['X'] = this.tiffInfo['width'];
+      parameters['Y'] = this.tiffInfo['height'];
+      formData.append('image', this.tiffFileObject);
+      formData.append('parameters', JSON.stringify(parameters));
+      this.apiService.kernel(formData).subscribe(
         response => {
-          console.log(response);
+          const blob = new Blob([response], { type: 'image/tiff' });
+          FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}.tif`);
         },
-        error => console.log(error)
+        error => {
+          console.log(error);
+        }
       );
     }
   }

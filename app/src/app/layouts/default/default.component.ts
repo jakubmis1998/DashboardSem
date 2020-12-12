@@ -25,7 +25,7 @@ export class DefaultComponent implements OnInit {
     }, 2000);
   }
 
-  sideBarToggler(event) {
+  sideBarToggler(event: any): void {
     this.sideBarOpened = !this.sideBarOpened;
   }
 

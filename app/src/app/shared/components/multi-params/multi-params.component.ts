@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormGroup, FormArray } from '@angular/forms';
+import { FormGroup, FormArray, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 
 @Component({
@@ -9,9 +9,10 @@ import { FormBuilder } from '@angular/forms';
 })
 export class MultiParamsComponent implements OnInit {
 
-  parametersForm: FormGroup;
-  get formItems() {
-    return this.parametersForm.get('items') as FormArray;
+  form: FormGroup;
+  submitted = false;
+  get formParameters(): FormArray {
+    return this.form.get('parameters') as FormArray;
   }
 
   @Output() parametersEvent = new EventEmitter<FormArray>();
@@ -19,27 +20,41 @@ export class MultiParamsComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
-    this.parametersForm = this.fb.group({
-      items: this.fb.array([ this.createItem() ])
+    this.form = this.fb.group({
+      filename: this.fb.control(''),
+      method: this.fb.control('', Validators.required),
+      parameters: this.fb.array([ this.createItem() ])
     });
   }
 
   createItem(): FormGroup {
     return this.fb.group({
-      R: '',
-      T: ''
+      R: this.fb.control('', [ Validators.required, Validators.min(1) ]),
+      T: this.fb.control('', [ Validators.required, Validators.min(1) ])
     });
   }
 
-  readParameters() {
-    this.parametersEvent.emit(this.parametersForm.value.items);
+  readParameters(): void {
+    this.submitted = true;
+    if (this.form.valid) {
+      this.parametersEvent.emit(this.form.value);
+    }
   }
 
-  addItem() {
-    this.formItems.push(this.createItem());
+  addItem(): void {
+    this.formParameters.push(this.createItem());
   }
 
-  deleteItem(index) {
-    this.formItems.removeAt(index);
+  deleteItem(index: number): void {
+    this.formParameters.removeAt(index);
+  }
+
+  isValidField(fieldName: string): boolean {
+    return (this.form.controls[fieldName].touched || this.submitted) && this.form.controls[fieldName].errors?.required;
+  }
+
+  isValidParameter(fieldName: string, index: number): boolean {
+    return (this.formParameters.controls[index].get(fieldName).touched || this.submitted) &&
+    (this.formParameters.controls[index].get(fieldName).errors?.required || this.formParameters.controls[0].get(fieldName).errors?.min);
   }
 }

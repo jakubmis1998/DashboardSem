@@ -1,17 +1,34 @@
 <div class="parameters-container">
 
-	<form [formGroup]="parametersForm">
+	<form [formGroup]="form">
 
-		<div formArrayName="items">
-			<div class="d-flex mx-2" *ngFor="let item of formItems.controls; let itemIndex=index" [formGroupName]="itemIndex">
+        <mat-form-field appearance="fill">
+            <mat-label>Method</mat-label>
+            <mat-select formControlName="method">
+                <mat-option value="sda">SDA</mat-option>
+                <mat-option value="multithread">Multi Thread</mat-option>
+            </mat-select>
+            <mat-error *ngIf="isValidField('method')">
+                Method is required
+            </mat-error>
+        </mat-form-field>
+
+		<div formArrayName="parameters">
+			<div class="d-flex pb-2" *ngFor="let item of formParameters.controls; let itemIndex=index" [formGroupName]="itemIndex">
                 <div class="w-100 d-flex flex-row align-items-center">
                     <mat-form-field class="form-field mr-2">
                         <mat-label>R</mat-label>
-                        <input matInput type="number" formControlName="R">
+                        <input matInput type="number" formControlName="R" min="1">
+                        <mat-error *ngIf="isValidParameter('R', itemIndex)">
+                            Minimum value must be at least 1
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field class="form-field mr-2">
                         <mat-label>T</mat-label>
-                        <input matInput type="number" formControlName="T">
+                        <input matInput type="number" formControlName="T" min="1">
+                        <mat-error *ngIf="isValidParameter('T', itemIndex)">
+                            Minimum value must be at least 1
+                        </mat-error>
                     </mat-form-field>
                     <button class="btn btn-danger" (click)="deleteItem(itemIndex)">
                         <i class="far fa-trash-alt d-flex align-items-center justify-content-center"></i>
@@ -19,9 +36,9 @@
                 </div>
 			</div>
 
-			<div class="d-flex justify-content-between">
-				<button mat-raised-button color="primary" (click)="addItem()">Add row</button>
-				<button mat-raised-button color="accent" (click)="readParameters()">Read</button>
+			<div class="d-flex justify-content-between mt-3">
+				<button mat-raised-button color="secondary" (click)="addItem()">New parameter</button>
+				<button mat-raised-button color="primary" (click)="readParameters()">Processing</button>
 			</div>
 		</div>
 

@@ -7,23 +7,23 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class BarComponent implements OnInit {
 
-  _data: [{ data: [], label: string }]; // Data + labels
+  data_: [{ data: [], label: string }]; // Data + labels
   @Input() set data(value: [{ data: [], label: string }]) {
     if (!this.chartInitialized) { // Assign data and labels
-      this._data = value;
+      this.data_ = value;
       this.chartInitialized = true;
     } else {  // Assign only data - to smooth chart transitions
-      for (let i=0; i<this._data.length; i++){
-        this._data[i].data = value[i].data;
+      for (let i = 0; i < this.data_.length; i++){
+        this.data_[i].data = value[i].data;
       }
     }
-  };
+  }
   @Input() labels = []; // Bottom of chart
   @Input() options = {};
   @Input() height: number;
 
-  type: string = 'bar';
-  legend: boolean = true;
+  type = 'bar';
+  legend = true;
   chartInitialized = false;
 
   constructor() { }

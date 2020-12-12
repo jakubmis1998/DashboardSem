@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { PeriodicElement } from '../shared/widgets/table/table.component';
 import { ApiService } from './api.service';
 
@@ -104,7 +104,7 @@ export class DashboardService {
     ];
   }
 
-  initSystemSettings() {
+  initSystemSettings(): void {
     /* System usage - cpu usage, ram usage, cpu_count */
     this.apiService.systemUsage().subscribe(
       response => {
@@ -164,18 +164,18 @@ export class DashboardService {
     );
   }
 
-  setSystemData() {
+  setSystemData(): void {
     /* System usage - cpu usage, ram usage, cpu_count */
     this.apiService.systemUsage().subscribe(
       response => {
         /* Data [{ data: [], label: 'Title' }, ...] */
-        const cpuData = [{ 
+        const cpuData = [{
           data: response.cpu_usage,
           label: 'CPU usage',
           backgroundColor: '#f5b01b',
           hoverBackgroundColor: '#ff6200'
         }];
-        const ramData = [{ 
+        const ramData = [{
           data: [ response.ram_usage.percent ],
           label: 'RAM usage',
           backgroundColor: '#1aacf0',
@@ -188,19 +188,19 @@ export class DashboardService {
     );
   }
 
-  getCpuSettings() {
+  getCpuSettings(): Observable<any> {
     return this.cpuSettingsSubject.asObservable();
   }
 
-  getCpuData() {
+  getCpuData(): Observable<any> {
     return this.cpuDataSubject.asObservable();
   }
 
-  getRamSettings() {
+  getRamSettings(): Observable<any> {
     return this.ramSettingsSubject.asObservable();
   }
 
-  getRamData() {
+  getRamData(): Observable<any> {
     return this.ramDataSubject.asObservable();
   }
 }

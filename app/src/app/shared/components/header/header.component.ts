@@ -13,7 +13,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void { }
 
-  toggleSideBar() {
+  toggleSideBar(): void {
     this.toggleSideBarForMe.emit();
 
     // Resize highlight-charts
