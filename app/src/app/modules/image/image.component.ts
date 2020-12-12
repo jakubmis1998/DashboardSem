@@ -124,13 +124,15 @@ export class ImageComponent implements OnInit, OnDestroy {
         error => console.log(error)
       );
     } else {
-      const formData = new FormData();
       parameters['filename'] = this.tiffFileObject.name;
       parameters['X'] = this.tiffInfo['width'];
       parameters['Y'] = this.tiffInfo['height'];
+
+      const formData = new FormData();
       formData.append('image', this.tiffFileObject);
       formData.append('parameters', JSON.stringify(parameters));
-      this.apiService.kernel(formData).subscribe(
+
+      this.apiService.processingWithKernel(formData).subscribe(
         response => {
           const blob = new Blob([response], { type: 'image/tiff' });
           FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}.tif`);

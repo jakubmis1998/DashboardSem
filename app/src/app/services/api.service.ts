@@ -43,9 +43,9 @@ export class ApiService {
     );
   }
 
-  kernel(postBody: FormData): Observable<any> {
+  processingWithKernel(postBody: FormData): Observable<any> {
     return this.http.post(
-      this.baseUrl + '/kernel/',
+      this.baseUrl + '/kernel_processing/',
       postBody,
       { responseType: 'blob' }
     );
