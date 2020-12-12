@@ -1,10 +1,13 @@
-<input type="file" (change)="readFile($event)">
+<div class="d-flex justify-content-center">
+	<input type="file" (change)="readFile($event)">
+</div>
+
 <div class="image-container d-flex flex-column mt-2">
-	<div class="canvas-container text-center">
+	<div class="canvas-container text-center d-flex justify-content-center">
 		<mat-spinner *ngIf="loading"></mat-spinner>
 	</div>
 
-	<div *ngIf="tiffInfo" class="tiffInfo p-2">
+	<div *ngIf="tiffInfo" class="tiffInfo mt-2 p-2">
 		<div class="d-flex justify-content-center mb-1">
 			<button (click)="goLeft()" mat-raised-button class="mr-2"
 				[disabled]="tiffInfo['current_page'] === 0">

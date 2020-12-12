@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MultiParamsComponent } from './components/multi-params/multi-params.component';
 import { AreaComponent } from './widgets/area/area.component';
 import { CardComponent } from './widgets/card/card.component';
@@ -33,7 +32,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   declarations: [
     HeaderComponent,
     FooterComponent,
-    SidebarComponent,
     AreaComponent,
     CardComponent,
     PieComponent,
@@ -63,7 +61,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   exports: [
     HeaderComponent,
     FooterComponent,
-    SidebarComponent,
     AreaComponent,
     CardComponent,
     PieComponent,

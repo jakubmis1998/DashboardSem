@@ -6,7 +6,7 @@ import { ImageComponent } from './modules/image/image.component';
 
 const routes: Routes = [{
   path: '', component: DefaultComponent, children: [
-    { path: '', component: DashboardComponent },
+    { path: 'dashboard', component: DashboardComponent },
     { path: 'image', component: ImageComponent }
   ],
 }];

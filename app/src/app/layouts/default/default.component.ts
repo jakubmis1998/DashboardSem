@@ -9,8 +9,6 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 })
 export class DefaultComponent implements OnInit {
 
-  sideBarOpened = false;
-
   constructor(
     private dashboardService: DashboardService,
     private router: Router
@@ -23,10 +21,6 @@ export class DefaultComponent implements OnInit {
         this.dashboardService.setSystemData();
       }
     }, 2000);
-  }
-
-  sideBarToggler(event: any): void {
-    this.sideBarOpened = !this.sideBarOpened;
   }
 
 }

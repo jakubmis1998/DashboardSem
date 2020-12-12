@@ -1,35 +1,28 @@
-<mat-toolbar color="primary">
-	<mat-toolbar-row>
-		<button mat-icon-button (click)="toggleSideBar()">
-				<mat-icon>menu</mat-icon>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary py-0">
+
+	<div class="container">
+
+		<!-- Title + Logo -->
+		<a class="navbar-brand">
+			<img src="/assets/logo.png" width="40" height="40" alt="Logo">
+		</a>
+
+		<!-- Hamburger -->
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
 		</button>
 
-		<span> APP LOGO </span>
-
-		<div fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-			<ul fxLayout="row" fxLayoutGap="20px">
-				<li>	
-					<button mat-icon-button>
-						<mat-icon>settings</mat-icon>
-					</button>
+		<!-- Nav -->
+		<div class="collapse navbar-collapse justify-content-end text-right" id="navbarToggler">
+			<ul class="navbar-nav mt-2 mt-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
 				</li>
-				<li>
-					<button mat-icon-button>
-						<mat-icon>help_outline</mat-icon>
-					</button>
+				<li class="nav-item">
+					<a class="nav-link" routerLink="/image" routerLinkActive="active">Tiff processing</a>
 				</li>
-				<li>
-					<button mat-button [matMenuTriggerFor]="menu">
-						<mat-icon>person_outline</mat-icon>
-					</button>
-					<mat-menu #menu="matMenu">
-						<button mat-menu-item>
-							<mat-icon>exit_to_app</mat-icon>
-							Sign out
-						</button>
-					</mat-menu>
-				</li>		
 			</ul>
 		</div>
-	</mat-toolbar-row>
-</mat-toolbar>
+	</div>
+
+</nav>

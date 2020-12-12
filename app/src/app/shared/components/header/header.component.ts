@@ -7,20 +7,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  @Output() toggleSideBarForMe = new EventEmitter();
-
   constructor() { }
 
   ngOnInit(): void { }
-
-  toggleSideBar(): void {
-    this.toggleSideBarForMe.emit();
-
-    // Resize highlight-charts
-    setTimeout(() => {
-      window.dispatchEvent(
-        new Event('resize')
-      );
-    }, 300);
-  }
 }
