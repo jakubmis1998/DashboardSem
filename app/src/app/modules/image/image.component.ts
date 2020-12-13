@@ -19,6 +19,7 @@ export class ImageComponent implements OnInit, OnDestroy {
   loading = false;
   tiffFileObject: File;  // Tiff as File
   withDownload = false;
+  isTogglerChecked = true;
 
   cpuChartData: [{ data: number[], label: string }];
   cpuChartSettings: { labels: string[], options: {} };
@@ -55,6 +56,7 @@ export class ImageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isTogglerChecked = this.dashboardService.intervalSubject.getValue();
     this.canvasContainer = document.querySelector('.canvas-container');
   }
 
@@ -142,6 +144,10 @@ export class ImageComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  onSlideToggle(): void {
+    this.dashboardService.intervalSubject.next(this.isTogglerChecked);
   }
 
 }

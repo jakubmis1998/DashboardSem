@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-widget-bar',
   templateUrl: './bar.component.html',
   styleUrls: ['./bar.component.scss']
 })
-export class BarComponent implements OnInit {
+export class BarComponent {
 
   data_: [{ data: [], label: string }]; // Data + labels
   @Input() set data(value: [{ data: [], label: string }]) {
@@ -28,5 +28,4 @@ export class BarComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void { }
 }

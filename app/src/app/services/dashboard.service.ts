@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { PeriodicElement } from '../shared/widgets/table/table.component';
 import { ApiService } from './api.service';
 
@@ -13,6 +13,8 @@ export class DashboardService {
 
   private ramDataSubject = new Subject<any>();
   private ramSettingsSubject = new Subject<any>();
+
+  public intervalSubject = new BehaviorSubject<any>(true);
 
   constructor(private apiService: ApiService) { }
 
@@ -106,7 +108,7 @@ export class DashboardService {
 
   initSystemSettings(): void {
     /* System usage - cpu usage, ram usage, cpu_count */
-    this.apiService.systemUsage().subscribe(
+    const subscription = this.apiService.systemUsage().subscribe(
       response => {
         /* Labels - [ '#1', '#2', ..., '#cpu_count' ] */
         let cpuLabels: any = Array.from(Array(response['cpu_count']).keys());
@@ -160,13 +162,14 @@ export class DashboardService {
 
         this.cpuSettingsSubject.next({ labels: cpuLabels, options: cpuOptions });
         this.ramSettingsSubject.next({ labels: [''], options: ramOptions });
+        subscription.unsubscribe();
       }
     );
   }
 
   setSystemData(): void {
     /* System usage - cpu usage, ram usage, cpu_count */
-    this.apiService.systemUsage().subscribe(
+    const subscription = this.apiService.systemUsage().subscribe(
       response => {
         /* Data [{ data: [], label: 'Title' }, ...] */
         const cpuData = [{
@@ -184,6 +187,7 @@ export class DashboardService {
 
         this.cpuDataSubject.next(cpuData);
         this.ramDataSubject.next(ramData);
+        subscription.unsubscribe();
       }
     );
   }

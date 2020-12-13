@@ -36,7 +36,11 @@
 	</div>
 </div>
 
-<div>
+<mat-divider class="my-2"></mat-divider>
+
+<mat-slide-toggle class="ml-2" color="primary" (change)="onSlideToggle()" [(ngModel)]="isTogglerChecked">Follow system usage</mat-slide-toggle>
+
+<div *ngIf="isTogglerChecked">
 	<div class="cpu-chart-container" fxFlex="80">
 		<mat-spinner *ngIf="!cpuChartData || !cpuChartSettings"></mat-spinner>
 		<app-widget-bar *ngIf="cpuChartData && cpuChartSettings"
