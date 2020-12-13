@@ -18,20 +18,20 @@
                 <div class="w-100 d-flex flex-row align-items-center">
                     <mat-form-field class="form-field mr-2">
                         <mat-label>R</mat-label>
-                        <input matInput type="number" formControlName="R" min="1">
+                        <input matInput type="number" formControlName="R" min="1" value="50">
                         <mat-error *ngIf="isValidParameter('R', itemIndex)">
                             Minimum value must be at least 1
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="form-field mr-2">
                         <mat-label>T</mat-label>
-                        <input matInput type="number" formControlName="T" min="1">
+                        <input matInput type="number" formControlName="T" min="1" value="5">
                         <mat-error *ngIf="isValidParameter('T', itemIndex)">
                             Minimum value must be at least 1
                         </mat-error>
                     </mat-form-field>
-                    <button class="btn btn-danger" (click)="deleteItem(itemIndex)">
-                        <i class="far fa-trash-alt d-flex align-items-center justify-content-center"></i>
+                    <button class="btn" (click)="deleteItem(itemIndex)">
+                        <i class="fas fa-minus-circle d-flex align-items-center justify-content-center"></i>
                     </button>
                 </div>
 			</div>

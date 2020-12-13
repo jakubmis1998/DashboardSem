@@ -53,6 +53,7 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.ramDataSubscription = this.dashboardService.getRamData().subscribe(data => {
       this.ramChartData = data;
     });
+
   }
 
   ngOnInit(): void {

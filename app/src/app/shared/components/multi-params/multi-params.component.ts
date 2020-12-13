@@ -22,15 +22,15 @@ export class MultiParamsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       filename: this.fb.control(''),
-      method: this.fb.control('', Validators.required),
+      method: this.fb.control('sda', Validators.required),
       parameters: this.fb.array([ this.createItem() ])
     });
   }
 
   createItem(): FormGroup {
     return this.fb.group({
-      R: this.fb.control('', [ Validators.required, Validators.min(1) ]),
-      T: this.fb.control('', [ Validators.required, Validators.min(1) ])
+      R: this.fb.control(100, [ Validators.required, Validators.min(1) ]),
+      T: this.fb.control(5, [ Validators.required, Validators.min(1) ])
     });
   }
 
