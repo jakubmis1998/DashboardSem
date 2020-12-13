@@ -7,9 +7,23 @@
             <mat-select formControlName="method">
                 <mat-option value="sda">SDA</mat-option>
                 <mat-option value="multithread">Multi Thread</mat-option>
+                <mat-option value="kernel">Kernel</mat-option>
             </mat-select>
             <mat-error *ngIf="isValidField('method')">
                 Method is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>RGB pixel depth</mat-label>
+            <mat-select formControlName="depth">
+                <mat-option value="8">8</mat-option>
+                <mat-option value="16">16</mat-option>
+                <mat-option value="32">32</mat-option>
+                <mat-option value="64">64</mat-option>
+            </mat-select>
+            <mat-error *ngIf="isValidField('depth')">
+                Depth is required
             </mat-error>
         </mat-form-field>
 

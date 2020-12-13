@@ -23,6 +23,7 @@ export class MultiParamsComponent implements OnInit {
     this.form = this.fb.group({
       filename: this.fb.control(''),
       method: this.fb.control('sda', Validators.required),
+      depth: this.fb.control('8', Validators.required),
       parameters: this.fb.array([ this.createItem() ])
     });
   }

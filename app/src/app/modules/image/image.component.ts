@@ -135,15 +135,20 @@ export class ImageComponent implements OnInit, OnDestroy {
       formData.append('image', this.tiffFileObject);
       formData.append('parameters', JSON.stringify(parameters));
 
-      this.apiService.processingWithKernel(formData).subscribe(
-        response => {
-          const blob = new Blob([response], { type: 'image/tiff' });
-          FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}.tif`);
-        },
-        error => {
-          console.log(error);
-        }
-      );
+      if (parameters['method'] === 'kernel') {
+        this.apiService.processingWithKernel(formData).subscribe(
+          response => {
+            const blob = new Blob([response], { type: 'image/tiff' });
+            FileSaver.saveAs(
+              blob,
+              `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}_T${parameters['parameters'][0]['T']}_${parameters['method']}.tif`
+            );
+          },
+          error => {
+            console.log(error);
+          }
+        );
+      }
     }
   }
 
