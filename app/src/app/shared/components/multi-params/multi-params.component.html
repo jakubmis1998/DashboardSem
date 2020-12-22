@@ -14,21 +14,8 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>RGB pixel depth</mat-label>
-            <mat-select formControlName="depth">
-                <mat-option value="8">8</mat-option>
-                <mat-option value="16">16</mat-option>
-                <mat-option value="32">32</mat-option>
-                <mat-option value="64">64</mat-option>
-            </mat-select>
-            <mat-error *ngIf="isValidField('depth')">
-                Depth is required
-            </mat-error>
-        </mat-form-field>
-
-		<div formArrayName="parameters">
-			<div class="d-flex pb-2" *ngFor="let item of formParameters.controls; let itemIndex=index" [formGroupName]="itemIndex">
+		<div formArrayName="switches">
+			<div class="d-flex pb-2" *ngFor="let item of formSwitches.controls; let itemIndex=index" [formGroupName]="itemIndex">
                 <div class="w-100 d-flex flex-row align-items-center">
                     <mat-form-field class="form-field mr-2">
                         <mat-label>R</mat-label>

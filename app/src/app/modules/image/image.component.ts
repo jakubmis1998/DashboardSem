@@ -64,7 +64,6 @@ export class ImageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cpuDataSubscription.unsubscribe();
     this.cpuSettingsSubscription.unsubscribe();
-
     this.ramDataSubscription.unsubscribe();
   }
 
@@ -122,26 +121,29 @@ export class ImageComponent implements OnInit, OnDestroy {
       this.apiService.sendParametrizedImage(this.tiffFileObject, parameters, true).subscribe(
         response => {
           const blob = new Blob([response], { type: 'image/tiff' });
-          FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}.tif`);
+          FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['switches'][0]['R']}.tif`);
         },
         error => console.log(error)
       );
     } else {
       parameters['filename'] = this.tiffFileObject.name;
+      parameters['pages'] = this.tiffInfo['pages'];
       parameters['X'] = this.tiffInfo['width'];
       parameters['Y'] = this.tiffInfo['height'];
 
       const formData = new FormData();
       formData.append('image', this.tiffFileObject);
-      formData.append('parameters', JSON.stringify(parameters));
+      formData.append('processing_info', JSON.stringify(parameters));
 
       if (parameters['method'] === 'kernel') {
+        console.log(parameters);
         this.apiService.processingWithKernel(formData).subscribe(
           response => {
+            console.log(response);
             const blob = new Blob([response], { type: 'image/tiff' });
             FileSaver.saveAs(
               blob,
-              `${this.tiffFileObject.name.split(".")[0]}_R${parameters['parameters'][0]['R']}_T${parameters['parameters'][0]['T']}_${parameters['method']}.tif`
+              `${this.tiffFileObject.name.split(".")[0]}_R${parameters['switches'][0]['R']}_T${parameters['switches'][0]['T']}_${parameters['method']}.tif`
             );
           },
           error => {

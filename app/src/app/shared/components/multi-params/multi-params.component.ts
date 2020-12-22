@@ -11,8 +11,8 @@ export class MultiParamsComponent implements OnInit {
 
   form: FormGroup;
   submitted = false;
-  get formParameters(): FormArray {
-    return this.form.get('parameters') as FormArray;
+  get formSwitches(): FormArray {
+    return this.form.get('switches') as FormArray;
   }
 
   @Output() parametersEvent = new EventEmitter<FormArray>();
@@ -23,8 +23,8 @@ export class MultiParamsComponent implements OnInit {
     this.form = this.fb.group({
       filename: this.fb.control(''),
       method: this.fb.control('sda', Validators.required),
-      depth: this.fb.control('8', Validators.required),
-      parameters: this.fb.array([ this.createItem() ])
+      pages: this.fb.control(1),
+      switches: this.fb.array([ this.createItem() ])
     });
   }
 
@@ -43,11 +43,11 @@ export class MultiParamsComponent implements OnInit {
   }
 
   addItem(): void {
-    this.formParameters.push(this.createItem());
+    this.formSwitches.push(this.createItem());
   }
 
   deleteItem(index: number): void {
-    this.formParameters.removeAt(index);
+    this.formSwitches.removeAt(index);
   }
 
   isValidField(fieldName: string): boolean {
@@ -55,7 +55,7 @@ export class MultiParamsComponent implements OnInit {
   }
 
   isValidParameter(fieldName: string, index: number): boolean {
-    return (this.formParameters.controls[index].get(fieldName).touched || this.submitted) &&
-    (this.formParameters.controls[index].get(fieldName).errors?.required || this.formParameters.controls[0].get(fieldName).errors?.min);
+    return (this.formSwitches.controls[index].get(fieldName).touched || this.submitted) &&
+    (this.formSwitches.controls[index].get(fieldName).errors?.required || this.formSwitches.controls[0].get(fieldName).errors?.min);
   }
 }
