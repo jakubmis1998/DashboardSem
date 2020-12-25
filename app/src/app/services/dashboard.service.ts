@@ -11,8 +11,8 @@ export class DashboardService {
   private cpuSettingsSubject = new Subject<any>();
   private cpuDataSubject = new Subject<any>();
 
-  private ramDataSubject = new Subject<any>();
-  private ramSettingsSubject = new Subject<any>();
+  private ramGpuDataSubject = new Subject<any>();
+  private ramGpuSettingsSubject = new Subject<any>();
 
   public intervalSubject = new BehaviorSubject<any>(true);
 
@@ -107,7 +107,7 @@ export class DashboardService {
   }
 
   initSystemSettings(): void {
-    /* System usage - cpu usage, ram usage, cpu_count */
+    /* System usage - cpu usage, ram/gpu usage, cpu_count */
     const subscription = this.apiService.systemUsage().subscribe(
       response => {
         /* Labels - [ '#1', '#2', ..., '#cpu_count' ] */
@@ -140,15 +140,15 @@ export class DashboardService {
           }
         };
 
-        /* RAM Options */
-        const ramOptions = {
+        /* RAM and GPU Options */
+        const ramGpuOptions = {
           scaleShowVerticalLines: false,
           responsive: true,
           scales : {
             yAxes: [{
               scaleLabel: {
                 display: true,
-                labelString: 'RAM usage percentage'
+                labelString: 'RAM/GPU usage percentage'
               },
               ticks: {
                 steps: 10,
@@ -161,14 +161,14 @@ export class DashboardService {
         };
 
         this.cpuSettingsSubject.next({ labels: cpuLabels, options: cpuOptions });
-        this.ramSettingsSubject.next({ labels: [''], options: ramOptions });
+        this.ramGpuSettingsSubject.next({ labels: [''], options: ramGpuOptions });
         subscription.unsubscribe();
       }
     );
   }
 
   setSystemData(): void {
-    /* System usage - cpu usage, ram usage, cpu_count */
+    /* System usage - cpu usage, ram/gpu usage, cpu_count */
     const subscription = this.apiService.systemUsage().subscribe(
       response => {
         /* Data [{ data: [], label: 'Title' }, ...] */
@@ -178,15 +178,23 @@ export class DashboardService {
           backgroundColor: '#f5b01b',
           hoverBackgroundColor: '#ff6200'
         }];
-        const ramData = [{
-          data: [ response.ram_usage.percent ],
-          label: 'RAM usage',
-          backgroundColor: '#1aacf0',
-          hoverBackgroundColor: '#0388fc'
-        }];
+        const ramGpuData = [
+          {
+            data: [ response.ram_usage.percent ],
+            label: 'RAM usage',
+            backgroundColor: '#1aacf0',
+            hoverBackgroundColor: '#0388fc'
+          },
+          {
+            data: [ response.gpu_usage ],
+            label: 'GPU usage',
+            backgroundColor: '#d22054',
+            hoverBackgroundColor: '#f50048'
+          }
+        ];
 
         this.cpuDataSubject.next(cpuData);
-        this.ramDataSubject.next(ramData);
+        this.ramGpuDataSubject.next(ramGpuData);
         subscription.unsubscribe();
       }
     );
@@ -200,11 +208,11 @@ export class DashboardService {
     return this.cpuDataSubject.asObservable();
   }
 
-  getRamSettings(): Observable<any> {
-    return this.ramSettingsSubject.asObservable();
+  getRamGpuSettings(): Observable<any> {
+    return this.ramGpuSettingsSubject.asObservable();
   }
 
-  getRamData(): Observable<any> {
-    return this.ramDataSubject.asObservable();
+  getRamGpuData(): Observable<any> {
+    return this.ramGpuDataSubject.asObservable();
   }
 }

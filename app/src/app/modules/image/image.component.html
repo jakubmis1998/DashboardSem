@@ -34,7 +34,12 @@
 	</div>
 </div>
 
-<mat-divider class="my-2"></mat-divider>
+<div *ngIf="activeRequestNumber" class="text-center mt-2">
+	<label>Waiting for <b>{{ activeRequestNumber }}</b> processed image(s)</label>
+	<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<mat-divider class="my-3"></mat-divider>
 
 <mat-slide-toggle class="ml-2" color="primary" (change)="onSlideToggle()" [(ngModel)]="isTogglerChecked">Follow system usage</mat-slide-toggle>
 
@@ -50,11 +55,11 @@
 	</div>
 	
 	<div class="ram-chart-container" fxFlex="20">
-		<mat-spinner *ngIf="!ramChartData || !ramChartSettings"></mat-spinner>
-		<app-widget-bar *ngIf="ramChartData && ramChartSettings"
-			[data]="ramChartData"
-			[labels]="ramChartSettings.labels"
-			[options]="ramChartSettings.options"
+		<mat-spinner *ngIf="!ramGpuChartData || !ramGpuChartSettings"></mat-spinner>
+		<app-widget-bar *ngIf="ramGpuChartData && ramGpuChartSettings"
+			[data]="ramGpuChartData"
+			[labels]="ramGpuChartSettings.labels"
+			[options]="ramGpuChartSettings.options"
 			[height]="500">
 		</app-widget-bar>
 	</div>

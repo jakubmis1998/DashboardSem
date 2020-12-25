@@ -15,6 +15,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
@@ -36,6 +37,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatSidenavModule,
     MatSlideToggleModule,
     MatDividerModule,
+    MatProgressBarModule,
     MatCardModule,
     FlexLayoutModule,
     MatButtonModule,

@@ -15,27 +15,28 @@ import { ToastrService } from 'ngx-toastr';
 export class ImageComponent implements OnInit, OnDestroy {
 
   tiffImage: Tiff;  // Image as Tiff
-  tiffInfo: {
+  tiffFileObject: File;  // Tiff as File
+  tiffInfo: {  // Tiff info
     name: string,
     width: number,
     height: number,
     pages: number,
     currentPage: number
-  }; // Tiff info
+  };
   canvasContainer: HTMLElement;  // For styling and replace tiffs
   loading = false;
-  tiffFileObject: File;  // Tiff as File
   isTogglerChecked = true;
+  activeRequestNumber = 0;
 
   cpuChartData: [{ data: number[], label: string }];
   cpuChartSettings: { labels: string[], options: {} };
   cpuDataSubscription: Subscription;
   cpuSettingsSubscription: Subscription;
 
-  ramChartData: [{ data: number[], label: string }];
-  ramChartSettings: { labels: string[], options: {} };
-  ramDataSubscription: Subscription;
-  ramSettingsSubscription: Subscription;
+  ramGpuChartData: [{ data: number[], label: string }];
+  ramGpuChartSettings: { labels: string[], options: {} };
+  ramGpuDataSubscription: Subscription;
+  ramGpuSettingsSubscription: Subscription;
 
   constructor(
     private apiService: ApiService,
@@ -53,14 +54,9 @@ export class ImageComponent implements OnInit, OnDestroy {
       this.cpuChartData = data;
     });
 
-    /* RAM CHART */
-    this.ramSettingsSubscription = this.dashboardService.getRamSettings().subscribe(settings => {
-      this.ramChartSettings = settings;
-    });
-    this.ramDataSubscription = this.dashboardService.getRamData().subscribe(data => {
-      this.ramChartData = data;
-    });
-
+    /* RAM/GPU CHART */
+    this.ramGpuSettingsSubscription = this.dashboardService.getRamGpuSettings().subscribe(settings => this.ramGpuChartSettings = settings);
+    this.ramGpuDataSubscription = this.dashboardService.getRamGpuData().subscribe(data => this.ramGpuChartData = data);
   }
 
   ngOnInit(): void {
@@ -71,7 +67,7 @@ export class ImageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.cpuDataSubscription.unsubscribe();
     this.cpuSettingsSubscription.unsubscribe();
-    this.ramDataSubscription.unsubscribe();
+    this.ramGpuDataSubscription.unsubscribe();
   }
 
   readFile(input: any): void {
@@ -100,15 +96,13 @@ export class ImageComponent implements OnInit, OnDestroy {
   }
 
   goLeft(): void {
-    const currentPage = this.tiffInfo.currentPage;
-    this.tiffImage.setDirectory(currentPage - 1);
+    this.tiffImage.setDirectory(this.tiffInfo.currentPage - 1);
     this.tiffInfo.currentPage -= 1;
     this.replaceTiff();
   }
 
   goRight(): void {
-    const currentPage = this.tiffInfo.currentPage;
-    this.tiffImage.setDirectory(currentPage + 1);
+    this.tiffImage.setDirectory(this.tiffInfo.currentPage + 1);
     this.tiffInfo.currentPage += 1;
     this.replaceTiff();
   }
@@ -124,28 +118,33 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
-  cartesianProductOf(...sets) {
+  cartesianProductOf(...sets): number[][] {
     const flatten = (arr) => [].concat.apply([], arr);
     return sets.reduce(
-      (acc, set) => flatten(acc.map(x => set.map(y => [ ...x, y ]))), [[]]);
+      (acc, set) => flatten(acc.map(x => set.map(y => [...x, y]))), [[]]);
   }
 
   onNewParameters(parameters: FormArray): void {
-    if (parameters['method'] === 'kernel') {
-
-      let Rs = [], Ts = [];
-      for (const el of parameters['switches']) {
-        Rs.push(el['R']);
-        Ts.push(el['T']);
+    let Rs = [], Ts = [];
+    for (const el of parameters['switches']) {
+      if (Rs.indexOf(el.R)) {
+        Rs.push(el.R);
       }
-      const switchesCartesianProduct = this.cartesianProductOf(Rs, Ts);
+      if (Ts.indexOf(el.T)) {
+        Ts.push(el.T);
+      }
+    }
+    const switchesCartesianProduct = this.cartesianProductOf(Rs, Ts);
 
+    if (parameters['method'] === 'kernel') {
       for (const switchElement of switchesCartesianProduct) {
         parameters['R'] = switchElement[0];
         parameters['T'] = switchElement[1];
+        this.activeRequestNumber++;
         this.apiService.processingWithKernel(parameters, this.tiffFileObject, this.tiffInfo).subscribe(
           response => {
-            this.toastr.success(`Received ${this.tiffFileObject.name} </br> R:${switchElement[0]} </br> T:${switchElement[1]} </br> Method:${parameters['method']}`, 'Success');
+            this.activeRequestNumber--;
+            this.toastr.success(`Name: ${ this.tiffFileObject.name } </br> R: ${ switchElement[0] } </br> T: ${ switchElement[1] } </br> Method: ${ parameters['method'].toUpperCase() }`, 'Image received!');
             const blob = new Blob([response], { type: 'image/tiff' });
             FileSaver.saveAs(
               blob,
@@ -153,7 +152,8 @@ export class ImageComponent implements OnInit, OnDestroy {
             );
           },
           error => {
-            console.log(error);
+            this.toastr.error(error, 'Error');
+            this.activeRequestNumber--;
           }
         );
       }
