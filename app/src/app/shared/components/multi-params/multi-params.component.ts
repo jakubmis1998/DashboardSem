@@ -22,7 +22,7 @@ export class MultiParamsComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       filename: this.fb.control(''),
-      method: this.fb.control('sda', Validators.required),
+      method: this.fb.control('kernel', Validators.required),
       pages: this.fb.control(1),
       switches: this.fb.array([ this.createItem() ])
     });
@@ -47,7 +47,9 @@ export class MultiParamsComponent implements OnInit {
   }
 
   deleteItem(index: number): void {
-    this.formSwitches.removeAt(index);
+    if (this.formSwitches.length > 1) {
+      this.formSwitches.removeAt(index);
+    }
   }
 
   isValidField(fieldName: string): boolean {

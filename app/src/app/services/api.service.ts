@@ -15,27 +15,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  sendParametrizedImage(tiffFile: File, parameters: FormArray, download = false): Observable<any> {
-    const formData = new FormData();
-    formData.append('image', tiffFile);
-    formData.append('parameters', JSON.stringify(parameters));
-
-    if (download) {
-      console.log('SEND FILE AND DOWNLOAD');
-      return this.http.post(
-        this.baseUrl + '/read_and_return/',
-        formData,
-        { responseType: 'blob' }
-      );
-    } else {
-      console.log('SEND FILE AND CALCULATE');
-      return this.http.post(
-        this.baseUrl + '/image_processing/',
-        formData
-      );
-    }
-  }
-
   systemUsage(): Observable<any> {
     return this.http.get(
       this.baseUrl + '/system_usage/',
@@ -43,10 +22,19 @@ export class ApiService {
     );
   }
 
-  processingWithKernel(postBody: FormData): Observable<any> {
+  processingWithKernel(parameters: FormArray, tiff: File, tiffInfo: { name: string, width: number, height: number, pages: number, currentPage: number }): Observable<any> {
+    parameters['filename'] = tiffInfo.name;
+    parameters['pages'] = tiffInfo.pages;
+    parameters['X'] = tiffInfo.width;
+    parameters['Y'] = tiffInfo.height;
+
+    const formData = new FormData();
+    formData.append('image', tiff);
+    formData.append('processing_info', JSON.stringify(parameters));
+
     return this.http.post(
       this.baseUrl + '/kernel_processing/',
-      postBody,
+      formData,
       { responseType: 'blob' }
     );
   }

@@ -5,6 +5,7 @@ import * as Tiff from 'tiff.js';
 import * as FileSaver from 'file-saver';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-image',
@@ -13,12 +14,17 @@ import { Subscription } from 'rxjs';
 })
 export class ImageComponent implements OnInit, OnDestroy {
 
-  tiffImage: any;  // Image as Tiff
-  tiffInfo: {};  // Tiff info
+  tiffImage: Tiff;  // Image as Tiff
+  tiffInfo: {
+    name: string,
+    width: number,
+    height: number,
+    pages: number,
+    currentPage: number
+  }; // Tiff info
   canvasContainer: HTMLElement;  // For styling and replace tiffs
   loading = false;
   tiffFileObject: File;  // Tiff as File
-  withDownload = false;
   isTogglerChecked = true;
 
   cpuChartData: [{ data: number[], label: string }];
@@ -33,8 +39,9 @@ export class ImageComponent implements OnInit, OnDestroy {
 
   constructor(
     private apiService: ApiService,
-    private dashboardService: DashboardService) {
-    Tiff.initialize({ TOTAL_MEMORY: 4777216 * 10 });  // Initialize the memory with 47 MB
+    private dashboardService: DashboardService,
+    private toastr: ToastrService) {
+    Tiff.initialize({ TOTAL_MEMORY: 10077216 * 10 });  // Initialize the memory with 100 MB
 
     this.dashboardService.initSystemSettings();
 
@@ -83,25 +90,26 @@ export class ImageComponent implements OnInit, OnDestroy {
   }
 
   setTiffInfo(): void {
-    this.tiffInfo = {};
-    this.tiffInfo['name'] = this.tiffFileObject.name;
-    this.tiffInfo['width'] = this.tiffImage.width();
-    this.tiffInfo['height'] = this.tiffImage.height();
-    this.tiffInfo['pages'] = this.tiffImage.countDirectory();
-    this.tiffInfo['current_page'] = this.tiffImage.currentDirectory();
+    this.tiffInfo = {
+      name: this.tiffFileObject.name,
+      width: this.tiffImage.width(),
+      height: this.tiffImage.height(),
+      pages: this.tiffImage.countDirectory(),
+      currentPage: this.tiffImage.currentDirectory()
+    };
   }
 
   goLeft(): void {
-    const currentPage = this.tiffInfo['current_page'];
+    const currentPage = this.tiffInfo.currentPage;
     this.tiffImage.setDirectory(currentPage - 1);
-    this.tiffInfo['current_page'] -= 1;
+    this.tiffInfo.currentPage -= 1;
     this.replaceTiff();
   }
 
   goRight(): void {
-    const currentPage = this.tiffInfo['current_page'];
+    const currentPage = this.tiffInfo.currentPage;
     this.tiffImage.setDirectory(currentPage + 1);
-    this.tiffInfo['current_page'] += 1;
+    this.tiffInfo.currentPage += 1;
     this.replaceTiff();
   }
 
@@ -116,34 +124,32 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
+  cartesianProductOf(...sets) {
+    const flatten = (arr) => [].concat.apply([], arr);
+    return sets.reduce(
+      (acc, set) => flatten(acc.map(x => set.map(y => [ ...x, y ]))), [[]]);
+  }
+
   onNewParameters(parameters: FormArray): void {
-    if (this.withDownload) {
-      this.apiService.sendParametrizedImage(this.tiffFileObject, parameters, true).subscribe(
-        response => {
-          const blob = new Blob([response], { type: 'image/tiff' });
-          FileSaver.saveAs(blob, `${this.tiffFileObject.name.split(".")[0]}_R${parameters['switches'][0]['R']}.tif`);
-        },
-        error => console.log(error)
-      );
-    } else {
-      parameters['filename'] = this.tiffFileObject.name;
-      parameters['pages'] = this.tiffInfo['pages'];
-      parameters['X'] = this.tiffInfo['width'];
-      parameters['Y'] = this.tiffInfo['height'];
+    if (parameters['method'] === 'kernel') {
 
-      const formData = new FormData();
-      formData.append('image', this.tiffFileObject);
-      formData.append('processing_info', JSON.stringify(parameters));
+      let Rs = [], Ts = [];
+      for (const el of parameters['switches']) {
+        Rs.push(el['R']);
+        Ts.push(el['T']);
+      }
+      const switchesCartesianProduct = this.cartesianProductOf(Rs, Ts);
 
-      if (parameters['method'] === 'kernel') {
-        console.log(parameters);
-        this.apiService.processingWithKernel(formData).subscribe(
+      for (const switchElement of switchesCartesianProduct) {
+        parameters['R'] = switchElement[0];
+        parameters['T'] = switchElement[1];
+        this.apiService.processingWithKernel(parameters, this.tiffFileObject, this.tiffInfo).subscribe(
           response => {
-            console.log(response);
+            this.toastr.success(`Received ${this.tiffFileObject.name} </br> R:${switchElement[0]} </br> T:${switchElement[1]} </br> Method:${parameters['method']}`, 'Success');
             const blob = new Blob([response], { type: 'image/tiff' });
             FileSaver.saveAs(
               blob,
-              `${this.tiffFileObject.name.split(".")[0]}_R${parameters['switches'][0]['R']}_T${parameters['switches'][0]['T']}_${parameters['method']}.tif`
+              `${ this.tiffFileObject.name.split(".")[0] }_R${ switchElement[0] }_T${ switchElement[1] }_${ parameters['method'] }.tif`
             );
           },
           error => {

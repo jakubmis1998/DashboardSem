@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultModule } from './layouts/default/default.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -17,7 +18,14 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     DefaultModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot({
+      timeOut: 30000,
+      positionClass: 'toast-top-right',
+      closeButton: true,
+      progressBar: true,
+      enableHtml: true
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
