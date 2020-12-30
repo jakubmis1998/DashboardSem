@@ -152,7 +152,8 @@ export class ImageComponent implements OnInit, OnDestroy {
             );
           },
           error => {
-            this.toastr.error(error, 'Error');
+            console.log(error);
+            this.toastr.error(error.error, 'Error');
             this.activeRequestNumber--;
           }
         );
