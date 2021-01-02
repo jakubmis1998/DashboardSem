@@ -25,7 +25,7 @@ export class MultiParamsComponent implements OnInit {
     this.form = this.fb.group({
       filename: this.fb.control(''),
       method: this.fb.control('sda', Validators.required),
-      maskName: this.fb.control('circular'),
+      maskName: this.fb.control('mask'),
       pages: this.fb.control(1),
       switches: this.fb.array([ this.createItem() ])
     });

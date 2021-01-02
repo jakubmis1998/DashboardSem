@@ -14,13 +14,9 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="fill" class="d-flex">
+        <mat-form-field class="d-flex">
             <mat-label>Mask</mat-label>
-            <mat-select formControlName="maskName">
-                <mat-option value="">---</mat-option>
-                <mat-option value="circular">Circular</mat-option>
-                <mat-option value="linear">Linear</mat-option>
-            </mat-select>
+            <input matInput type="text" formControlName="maskName">
         </mat-form-field>
 
 		<div formArrayName="switches">
