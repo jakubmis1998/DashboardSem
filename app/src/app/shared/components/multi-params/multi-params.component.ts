@@ -1,6 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, FormArray, Validators } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-multi-params',
@@ -17,12 +19,13 @@ export class MultiParamsComponent implements OnInit {
 
   @Output() parametersEvent = new EventEmitter<FormArray>();
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private apiService: ApiService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
       filename: this.fb.control(''),
-      method: this.fb.control('kernel', Validators.required),
+      method: this.fb.control('sda', Validators.required),
+      maskName: this.fb.control('circular'),
       pages: this.fb.control(1),
       switches: this.fb.array([ this.createItem() ])
     });
@@ -40,6 +43,18 @@ export class MultiParamsComponent implements OnInit {
     if (this.form.valid) {
       this.parametersEvent.emit(this.form.value);
     }
+  }
+
+  getProgress(): void {
+    this.apiService.processingProgress().subscribe(
+      response => {
+        let toastMessage = '';
+        for (const object of response.results) {
+          toastMessage += `${ object.name } </br> ${ object.progress }% </br>`;
+        }
+        this.toastr.info(toastMessage || 'No active processing', 'Processing progress');
+      }
+    );
   }
 
   addItem(): void {

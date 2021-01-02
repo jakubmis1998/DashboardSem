@@ -3,7 +3,7 @@
 	<form [formGroup]="form">
 
         <mat-form-field appearance="fill">
-            <mat-label>Method</mat-label>
+            <mat-label>Method*</mat-label>
             <mat-select formControlName="method">
                 <mat-option value="sda">SDA</mat-option>
                 <mat-option value="multithread">Multi Thread</mat-option>
@@ -14,18 +14,27 @@
             </mat-error>
         </mat-form-field>
 
+        <mat-form-field appearance="fill" class="d-flex">
+            <mat-label>Mask</mat-label>
+            <mat-select formControlName="maskName">
+                <mat-option value="">---</mat-option>
+                <mat-option value="circular">Circular</mat-option>
+                <mat-option value="linear">Linear</mat-option>
+            </mat-select>
+        </mat-form-field>
+
 		<div formArrayName="switches">
 			<div class="d-flex pb-2" *ngFor="let item of formSwitches.controls; let itemIndex=index" [formGroupName]="itemIndex">
                 <div class="w-100 d-flex flex-row align-items-center">
                     <mat-form-field class="form-field mr-2">
-                        <mat-label>R</mat-label>
+                        <mat-label>R*</mat-label>
                         <input matInput type="number" formControlName="R" min="1" value="50">
                         <mat-error *ngIf="isValidParameter('R', itemIndex)">
                             Minimum value must be at least 1
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="form-field mr-2">
-                        <mat-label>T</mat-label>
+                        <mat-label>T*</mat-label>
                         <input matInput type="number" formControlName="T" min="1" value="5">
                         <mat-error *ngIf="isValidParameter('T', itemIndex)">
                             Minimum value must be at least 1
@@ -39,6 +48,7 @@
 
 			<div class="d-flex justify-content-between mt-3">
 				<button mat-raised-button color="secondary" (click)="addItem()">New parameter</button>
+                <button mat-raised-button color="info" (click)="getProgress()">Check progress</button>
 				<button mat-raised-button color="primary" (click)="readParameters()">Processing</button>
 			</div>
 		</div>

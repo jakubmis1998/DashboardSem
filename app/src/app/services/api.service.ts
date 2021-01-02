@@ -22,6 +22,13 @@ export class ApiService {
     );
   }
 
+  processingProgress(): Observable<any> {
+    return this.http.get(
+      this.baseUrl + '/processing_progress/',
+      { headers: this.httpHeaders }
+    );
+  }
+
   processingWithKernel(parameters: FormArray, tiff: File, tiffInfo: { name: string, width: number, height: number, pages: number, currentPage: number }): Observable<any> {
     parameters['filename'] = tiffInfo.name;
     parameters['pages'] = tiffInfo.pages;
@@ -34,6 +41,20 @@ export class ApiService {
 
     return this.http.post(
       this.baseUrl + '/kernel_processing/',
+      formData,
+      { responseType: 'blob' }
+    );
+  }
+
+  processingWithJar(parameters: FormArray, tiff: File): Observable<any> {
+    parameters['filename'] = tiff.name;
+
+    const formData = new FormData();
+    formData.append('image', tiff);
+    formData.append('processing_info', JSON.stringify(parameters));
+
+    return this.http.post(
+      this.baseUrl + '/jar_processing/',
       formData,
       { responseType: 'blob' }
     );

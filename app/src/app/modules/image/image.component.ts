@@ -136,28 +136,32 @@ export class ImageComponent implements OnInit, OnDestroy {
     }
     const switchesCartesianProduct = this.cartesianProductOf(Rs, Ts);
 
-    if (parameters['method'] === 'kernel') {
-      for (const switchElement of switchesCartesianProduct) {
-        parameters['R'] = switchElement[0];
-        parameters['T'] = switchElement[1];
-        this.activeRequestNumber++;
-        this.apiService.processingWithKernel(parameters, this.tiffFileObject, this.tiffInfo).subscribe(
-          response => {
-            this.activeRequestNumber--;
-            this.toastr.success(`Name: ${ this.tiffFileObject.name } </br> R: ${ switchElement[0] } </br> T: ${ switchElement[1] } </br> Method: ${ parameters['method'].toUpperCase() }`, 'Image received!');
-            const blob = new Blob([response], { type: 'image/tiff' });
-            FileSaver.saveAs(
-              blob,
-              `${ this.tiffFileObject.name.split(".")[0] }_R${ switchElement[0] }_T${ switchElement[1] }_${ parameters['method'] }.tif`
-            );
-          },
-          error => {
-            console.log(error);
-            this.toastr.error(error.error, 'Error');
-            this.activeRequestNumber--;
-          }
-        );
+    for (const switchElement of switchesCartesianProduct) {
+      parameters['R'] = switchElement[0];
+      parameters['T'] = switchElement[1];
+      this.activeRequestNumber++;
+      let processingFunction;
+      if (parameters['method'] === 'kernel') {
+        processingFunction = this.apiService.processingWithKernel(parameters, this.tiffFileObject, this.tiffInfo);
+      } else if (parameters['method'] === 'sda') {
+        processingFunction = this.apiService.processingWithJar(parameters, this.tiffFileObject)
       }
+      processingFunction.subscribe(
+        response => {
+          this.activeRequestNumber--;
+          this.toastr.success(`Name: ${ this.tiffFileObject.name } </br> R: ${ switchElement[0] } </br> T: ${ switchElement[1] } </br> Method: ${ parameters['method'].toUpperCase() }`, 'Image received!');
+          const blob = new Blob([response], { type: 'image/tiff' });
+          FileSaver.saveAs(
+            blob,
+            `${ this.tiffFileObject.name.split(".")[0] }_R${ switchElement[0] }_T${ switchElement[1] }_${ parameters['method'] }.tif`
+          );
+        },
+        error => {
+          console.log(error);
+          this.toastr.error(error.error, 'Error');
+          this.activeRequestNumber--;
+        }
+      );
     }
   }
 
