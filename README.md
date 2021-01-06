@@ -3,6 +3,5 @@
 ## Requirements:
 + Angular Material
 + Bootstrap
-+ Charts (ng2-charts + chart.js + highcharts)
++ Charts (ng2-charts based on Chart.js)
 + Tiffs (tiff.js)
-+ Flex-layout
