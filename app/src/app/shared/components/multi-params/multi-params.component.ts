@@ -52,7 +52,7 @@ export class MultiParamsComponent implements OnInit {
         for (const object of response.results) {
           toastMessage += `${ object.name } </br> ${ object.progress }% </br>`;
         }
-        this.toastr.info(toastMessage || 'No active processing', 'Processing progress');
+        this.toastr.info(toastMessage || 'No active processing!', 'Processing progress');
       }
     );
   }

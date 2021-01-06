@@ -71,12 +71,9 @@ export class ImageComponent implements OnInit, OnDestroy {
     this.ramGpuDataSubscription.unsubscribe();
   }
 
-  readFile(input: any): void {
+  readFile(e: any): void {
     this.loading = true;
 
-    console.log(input);
-    console.log(this.tiffFormControl);
-    // this.tiffFileObject = input.target.files[0];
     this.tiffFileObject = this.tiffFormControl.value;
     const fileReader = new FileReader();
 
@@ -161,7 +158,6 @@ export class ImageComponent implements OnInit, OnDestroy {
           );
         },
         error => {
-          console.log(error);
           this.toastr.error(error.error, 'Error');
           this.activeRequestNumber--;
         }

@@ -8,7 +8,6 @@ import { DashboardService } from 'src/app/services/dashboard.service';
 import { ApiService } from 'src/app/services/api.service';
 
 import { DefaultComponent } from './default.component';
-import { DashboardComponent } from 'src/app/modules/dashboard/dashboard.component';
 import { ImageComponent } from 'src/app/modules/image/image.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -17,18 +16,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatCardModule } from '@angular/material/card';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 @NgModule({
   declarations: [
     DefaultComponent,
-    DashboardComponent,
     ImageComponent
   ],
   imports: [
@@ -38,6 +34,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
+    FlexLayoutModule,
     MatFormFieldModule,
     MatSidenavModule,
     MatSlideToggleModule,
@@ -45,11 +42,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     NgxMatFileInputModule,
     MatIconModule,
     MatProgressBarModule,
-    MatCardModule,
-    FlexLayoutModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule
   ],
   providers: [
     DashboardService,

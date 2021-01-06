@@ -25,7 +25,7 @@ export class DefaultComponent implements OnInit, OnDestroy {
           if (!response) {
             clearInterval(this.interval);
           } else {
-            // this.followSystemUsage();
+            this.followSystemUsage();
           }
         }
       )
@@ -38,7 +38,7 @@ export class DefaultComponent implements OnInit, OnDestroy {
 
   private followSystemUsage(): void {
     this.interval = setInterval(() => {
-      if (this.router.url === '/image') {
+      if (this.router.url === '/processing') {
         this.dashboardService.setSystemData();
       }
     }, 2000);
