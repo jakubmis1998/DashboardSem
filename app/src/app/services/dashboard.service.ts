@@ -128,7 +128,10 @@ export class DashboardService {
                 steps: 10,
                 stepValue: 10,
                 max: 100,
-                min: 0
+                min: 0,
+                callback: function(tick) {
+                  return tick.toString() + '%';
+                }
               }
             }],
             xAxes: [{
@@ -154,7 +157,10 @@ export class DashboardService {
                 steps: 10,
                 stepValue: 10,
                 max: 100,
-                min: 0
+                min: 0,
+                callback: function(tick) {
+                  return tick.toString() + '%';
+                }
               }
             }]
           }
@@ -174,20 +180,20 @@ export class DashboardService {
         /* Data [{ data: [], label: 'Title' }, ...] */
         const cpuData = [{
           data: response.cpu_usage,
-          label: 'CPU usage',
+          label: response.cpu_name,
           backgroundColor: '#f5b01b',
           hoverBackgroundColor: '#ff6200'
         }];
         const ramGpuData = [
           {
             data: [ response.ram_usage.percent ],
-            label: 'RAM usage',
+            label: 'RAM memory usage',
             backgroundColor: '#1aacf0',
             hoverBackgroundColor: '#0388fc'
           },
           {
             data: [ response.gpu_usage ],
-            label: 'GPU usage',
+            label: response.gpu_name || 'No GPU',
             backgroundColor: '#d22054',
             hoverBackgroundColor: '#f50048'
           }

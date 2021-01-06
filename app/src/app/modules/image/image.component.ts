@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormControl } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import * as Tiff from 'tiff.js';
 import * as FileSaver from 'file-saver';
@@ -16,6 +16,7 @@ export class ImageComponent implements OnInit, OnDestroy {
 
   tiffImage: Tiff;  // Image as Tiff
   tiffFileObject: File;  // Tiff as File
+  tiffFormControl = new FormControl();
   tiffInfo: {  // Tiff info
     name: string,
     width: number,
@@ -73,7 +74,10 @@ export class ImageComponent implements OnInit, OnDestroy {
   readFile(input: any): void {
     this.loading = true;
 
-    this.tiffFileObject = input.target.files[0];
+    console.log(input);
+    console.log(this.tiffFormControl);
+    // this.tiffFileObject = input.target.files[0];
+    this.tiffFileObject = this.tiffFormControl.value;
     const fileReader = new FileReader();
 
     /* Convert File to ArrayBuffer and display TIFF */

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/services/api.service';
@@ -25,7 +25,7 @@ export class MultiParamsComponent implements OnInit {
     this.form = this.fb.group({
       filename: this.fb.control(''),
       method: this.fb.control('sda', Validators.required),
-      maskName: this.fb.control('mask'),
+      mask: this.fb.control(''),
       pages: this.fb.control(1),
       switches: this.fb.array([ this.createItem() ])
     });

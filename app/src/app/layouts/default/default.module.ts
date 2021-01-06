@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { DashboardService } from 'src/app/services/dashboard.service';
 import { ApiService } from 'src/app/services/api.service';
@@ -20,6 +20,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 
 @NgModule({
@@ -33,10 +36,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RouterModule,
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule,
+    MatFormFieldModule,
     MatSidenavModule,
     MatSlideToggleModule,
     MatDividerModule,
+    NgxMatFileInputModule,
+    MatIconModule,
     MatProgressBarModule,
     MatCardModule,
     FlexLayoutModule,

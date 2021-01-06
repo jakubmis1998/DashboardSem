@@ -1,6 +1,12 @@
-<div class="d-flex justify-content-center">
+<!-- <div class="d-flex justify-content-center">
 	<input type="file" (change)="readFile($event)">
-</div>
+</div> -->
+
+<mat-form-field class="d-flex justify-content-center" appearance="fill">
+	<ngx-mat-file-input [formControl]="tiffFormControl" multiple="false" color="primary" (change)="readFile($event)">
+		<mat-icon ngxMatFileInputIcon>folder</mat-icon>
+	</ngx-mat-file-input>
+</mat-form-field>
 
 <div class="image-container d-flex flex-column mt-2">
 	<div class="canvas-container text-center d-flex justify-content-center">

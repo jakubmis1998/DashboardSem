@@ -25,7 +25,7 @@ export class DefaultComponent implements OnInit, OnDestroy {
           if (!response) {
             clearInterval(this.interval);
           } else {
-            this.followSystemUsage();
+            // this.followSystemUsage();
           }
         }
       )
