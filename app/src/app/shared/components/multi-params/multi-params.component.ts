@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { FormBuilder } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { ToastrService } from 'ngx-toastr';
 import { ApiService } from 'src/app/services/api.service';
 
@@ -16,6 +17,7 @@ export class MultiParamsComponent implements OnInit {
   get formSwitches(): FormArray {
     return this.form.get('switches') as FormArray;
   }
+  progressDisabled = false;
 
   @Output() parametersEvent = new EventEmitter<FormArray>();
 
@@ -57,8 +59,16 @@ export class MultiParamsComponent implements OnInit {
     );
   }
 
+  onMethodChange(methodName: MatSelectChange): void {
+    this.progressDisabled = methodName.value === 'kernel';
+  }
+
   addItem(): void {
     this.formSwitches.push(this.createItem());
+  }
+
+  clearFileInput(): void {
+    this.form.get('mask').setValue("");
   }
 
   deleteItem(index: number): void {
