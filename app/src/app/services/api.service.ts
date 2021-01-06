@@ -37,6 +37,8 @@ export class ApiService {
 
     const formData = new FormData();
     formData.append('image', tiff);
+    formData.append('mask', parameters['mask']);
+    delete parameters["mask"];
     formData.append('processing_info', JSON.stringify(parameters));
 
     return this.http.post(
@@ -51,6 +53,8 @@ export class ApiService {
 
     const formData = new FormData();
     formData.append('image', tiff);
+    formData.append('mask', parameters['mask']);
+    delete parameters["mask"];
     formData.append('processing_info', JSON.stringify(parameters));
 
     return this.http.post(

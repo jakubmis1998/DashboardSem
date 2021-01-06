@@ -150,7 +150,10 @@ export class ImageComponent implements OnInit, OnDestroy {
       processingFunction.subscribe(
         response => {
           this.activeRequestNumber--;
-          this.toastr.success(`Name: ${ this.tiffFileObject.name } </br> R: ${ switchElement[0] } </br> T: ${ switchElement[1] } </br> Method: ${ parameters['method'].toUpperCase() }`, 'Image received!');
+          this.toastr.success(
+            `Name: ${ this.tiffFileObject.name } </br> R: ${ switchElement[0] } </br> T: ${ switchElement[1] } </br> Method: ${ parameters['method'].toUpperCase() }`,
+            'Image received!'
+          );
           const blob = new Blob([response], { type: 'image/tiff' });
           FileSaver.saveAs(
             blob,
