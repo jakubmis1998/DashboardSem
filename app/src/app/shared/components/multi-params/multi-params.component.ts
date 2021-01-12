@@ -64,9 +64,9 @@ export class MultiParamsComponent implements OnInit {
     // Progress not available for kernel.
     this.progressDisabled = methodName.value === 'kernel';
 
-    // Mask available only for sda.
-    this.maskDisabled = !(methodName.value === 'sda');
-    if (methodName.value !== 'sda') {
+    // Mask available only for sda and kernel.
+    this.maskDisabled = !(methodName.value === 'sda' || methodName.value === 'kernel');
+    if (this.maskDisabled) {
       this.form.get('mask').setValue('');
     }
   }
