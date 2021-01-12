@@ -144,14 +144,14 @@ export class ImageComponent implements OnInit, OnDestroy {
       let processingFunction;
       if (parameters['method'] === 'kernel') {
         processingFunction = this.apiService.processingWithKernel(parameters, this.tiffFileObject, this.tiffInfo);
-      } else if (parameters['method'] === 'sda') {
+      } else {
         processingFunction = this.apiService.processingWithJar(parameters, this.tiffFileObject)
       }
       processingFunction.subscribe(
         response => {
           this.activeRequestNumber--;
           this.toastr.success(
-            `Name: ${ this.tiffFileObject.name } </br> R: ${ switchElement[0] } </br> T: ${ switchElement[1] } </br> Method: ${ parameters['method'].toUpperCase() }`,
+            `<b> Name: </b> ${ this.tiffFileObject.name } </br> <b> R: </b> ${ switchElement[0] } </br> <b> T: </b> ${ switchElement[1] } </br> <b> Method: </b> ${ parameters['method'].toUpperCase() }`,
             'Image received!'
           );
           const blob = new Blob([response], { type: 'image/tiff' });

@@ -5,7 +5,8 @@
         <mat-form-field appearance="fill">
             <mat-label>Method*</mat-label>
             <mat-select formControlName="method" (selectionChange)="onMethodChange($event)">
-                <mat-option value="sda">SDA</mat-option>
+                <mat-option value="classic">Classic SDA</mat-option>
+                <mat-option value="sda">Flying Histogram</mat-option>
                 <mat-option value="multithread">Multi Thread</mat-option>
                 <mat-option value="kernel">Kernel</mat-option>
             </mat-select>
@@ -14,7 +15,7 @@
             </mat-error>
         </mat-form-field>
 
-        <div class="d-flex">
+        <div [class.d-flex]="!maskDisabled" [class.d-none]="maskDisabled">
             <mat-form-field appearance="fill">
                 <mat-label>Mask</mat-label>
                 <ngx-mat-file-input [formControl]="form.get('mask')" multiple="false" accept="application/JSON" color="primary">

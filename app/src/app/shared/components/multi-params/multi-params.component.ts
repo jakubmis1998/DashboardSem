@@ -18,6 +18,7 @@ export class MultiParamsComponent implements OnInit {
     return this.form.get('switches') as FormArray;
   }
   progressDisabled = false;
+  maskDisabled = false;
 
   @Output() parametersEvent = new EventEmitter<FormArray>();
 
@@ -60,7 +61,14 @@ export class MultiParamsComponent implements OnInit {
   }
 
   onMethodChange(methodName: MatSelectChange): void {
+    // Progress not available for kernel.
     this.progressDisabled = methodName.value === 'kernel';
+
+    // Mask available only for sda.
+    this.maskDisabled = !(methodName.value === 'sda');
+    if (methodName.value !== 'sda') {
+      this.form.get('mask').setValue('');
+    }
   }
 
   addItem(): void {
