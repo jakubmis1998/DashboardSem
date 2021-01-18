@@ -29,16 +29,17 @@ export class ApiService {
     );
   }
 
-  processingWithKernel(parameters: FormArray, tiff: File, tiffInfo: { name: string, width: number, height: number, pages: number, currentPage: number }): Observable<any> {
-    parameters['filename'] = tiffInfo.name;
-    parameters['pages'] = tiffInfo.pages;
-    parameters['X'] = tiffInfo.width;
-    parameters['Y'] = tiffInfo.height;
+  processingWithKernel(apiParameters: any, tiff: File, mask: File, tiffInfo: { name: string, width: number, height: number, pages: number, currentPage: number }): Observable<any> {
+    apiParameters['filename'] = tiff.name;
+    apiParameters['pages'] = tiffInfo.pages;
+    apiParameters['X'] = tiffInfo.width;
+    apiParameters['Y'] = tiffInfo.height;
 
     const formData = new FormData();
     formData.append('image', tiff);
-    formData.append('mask', parameters['mask']);
-    formData.append('processing_info', JSON.stringify(parameters));
+    formData.append('mask', mask);
+    formData.append('processing_info', JSON.stringify(apiParameters));
+    console.log(tiff);
 
     return this.http.post(
       this.baseUrl + '/kernel_processing/',
@@ -47,13 +48,14 @@ export class ApiService {
     );
   }
 
-  processingWithJar(parameters: FormArray, tiff: File): Observable<any> {
-    parameters['filename'] = tiff.name;
+  processingWithJar(apiParameters: any, tiff: File, mask: File, tiffInfo: { name: string, width: number, height: number, pages: number, currentPage: number }): Observable<any> {
+    apiParameters['filename'] = tiff.name;
+    apiParameters['pages'] = tiffInfo.pages;
 
     const formData = new FormData();
     formData.append('image', tiff);
-    formData.append('mask', parameters['mask']);
-    formData.append('processing_info', JSON.stringify(parameters));
+    formData.append('mask', mask);
+    formData.append('processing_info', JSON.stringify(apiParameters));
 
     return this.http.post(
       this.baseUrl + '/jar_processing/',

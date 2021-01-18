@@ -137,27 +137,31 @@ export class ImageComponent implements OnInit, OnDestroy {
     }
     const switchesCartesianProduct = this.cartesianProductOf(Rs, Ts);
 
+    let apiParameters = {
+      'method': parameters['method']
+    };
+
     for (const switchElement of switchesCartesianProduct) {
-      parameters['R'] = switchElement[0];
-      parameters['T'] = switchElement[1];
+      apiParameters['R'] = switchElement[0];
+      apiParameters['T'] = switchElement[1];
       this.activeRequestNumber++;
       let processingFunction;
-      if (parameters['method'] === 'kernel') {
-        processingFunction = this.apiService.processingWithKernel(parameters, this.tiffFileObject, this.tiffInfo);
+      if (apiParameters['method'] === 'kernel') {
+        processingFunction = this.apiService.processingWithKernel(apiParameters, this.tiffFileObject, parameters['mask'], this.tiffInfo);
       } else {
-        processingFunction = this.apiService.processingWithJar(parameters, this.tiffFileObject)
+        processingFunction = this.apiService.processingWithJar(apiParameters, this.tiffFileObject, parameters['mask'], this.tiffInfo)
       }
       processingFunction.subscribe(
         response => {
           this.activeRequestNumber--;
           this.toastr.success(
-            `<b> Name: </b> ${ this.tiffFileObject.name } </br> <b> R: </b> ${ switchElement[0] } </br> <b> T: </b> ${ switchElement[1] } </br> <b> Method: </b> ${ parameters['method'].toUpperCase() }`,
+            `<b> Name: </b> ${ this.tiffFileObject.name } </br> <b> R: </b> ${ switchElement[0] } </br> <b> T: </b> ${ switchElement[1] } </br> <b> Method: </b> ${ apiParameters['method'].toUpperCase() }`,
             'Image received!'
           );
           const blob = new Blob([response], { type: 'image/tiff' });
           FileSaver.saveAs(
             blob,
-            `${ this.tiffFileObject.name.split(".")[0] }_R${ switchElement[0] }_T${ switchElement[1] }_${ parameters['method'] }.tif`
+            `${ this.tiffFileObject.name.split(".")[0] }_R${ switchElement[0] }_T${ switchElement[1] }_${ apiParameters['method'] }.tif`
           );
         },
         error => {
